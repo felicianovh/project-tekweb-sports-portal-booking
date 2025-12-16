@@ -1,20 +1,13 @@
 <?php
-// --- LOGIKA PENGGABUNGAN WAKTU & HARGA ---
 $merged_details = [];
 foreach ($details as $d) {
     // Ambil index array terakhir
     $last_idx = count($merged_details) - 1;
 
-    // Cek apakah slot ini adalah lanjutan dari slot sebelumnya
-    // Syarat: Array tidak kosong DAN Waktu Selesai slot sebelumnya == Waktu Mulai slot sekarang
     if ($last_idx >= 0 && $merged_details[$last_idx]['end_time'] === $d['start_time']) {
-        // GABUNGKAN: Update waktu selesai menjadi waktu selesai slot ini
         $merged_details[$last_idx]['end_time'] = $d['end_time'];
-        // JUMLAHKAN HARGA: Tambahkan harga slot ini ke total harga baris tersebut
-        // Pastikan Anda sudah update query SQL index.php sesuai instruksi di atas
         $merged_details[$last_idx]['price'] += $d['price'] ?? 0;
     } else {
-        // BARIS BARU: Jika waktunya putus atau ini data pertama
         $merged_details[] = [
             'start_time' => $d['start_time'],
             'end_time'   => $d['end_time'],
@@ -83,4 +76,5 @@ foreach ($details as $d) {
         </button>
         <a href="?p=history" class="ml-4 text-slate-500 hover:underline">Kembali</a>
     </div>
+
 </div>
