@@ -75,8 +75,6 @@ elseif ($act === 'book_now' && is_auth()) {
         $price_per_hour = $fac->fetchColumn();
         $total_price = count($slot_ids) * $price_per_hour;
 
-        // Jika ADMIN yang booking, status langsung 'approved' (Opsional, atau tetap pending)
-        // Di sini saya buat tetap 'pending' agar seragam, admin bisa approve sendiri nanti.
         $status_awal = is_admin() ? 'approved' : 'pending'; // Ubah jadi 'pending' jika admin mau bayar juga
         
         $stmt = $pdo->prepare("INSERT INTO bookings (user_id, facility_id, total_price, status) VALUES (?, ?, ?, ?)");
@@ -118,7 +116,6 @@ elseif ($act === 'cancel_booking') {
 }
 
 // --- 3. ADMIN ONLY ACTIONS ---
-// Letakkan di paling bawah agar tidak memblokir fungsi umum di atas
 elseif (is_admin()) {
     if ($act === 'save_facility') {
          $path = $_POST['old_img'] ?? null;
@@ -182,3 +179,4 @@ elseif (is_admin()) {
 }
 
 ?>
+
