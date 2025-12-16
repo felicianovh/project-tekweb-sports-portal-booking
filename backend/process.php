@@ -8,7 +8,6 @@ $act = $_POST['act'] ?? '';
 
 // --- 1. AUTHENTICATION (Login/Register/Google) ---
 if ($act === 'login') {
-    // ... (Kodingan Login Anda tetap sama) ...
     $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ?");
     $stmt->execute([$_POST['email']]);
     $user = $stmt->fetch();
@@ -21,10 +20,7 @@ if ($act === 'login') {
         redirect("p=auth/login&err=Email atau password salah");
     }
 } elseif ($act === 'google_login') {
-    // ... (Kodingan Google Login tetap sama) ...
-    // (Pastikan copy paste bagian google_login Anda di sini)
     $payload = json_decode(base64_decode(explode('.', $_POST['credential'])[1]), true);
-    // ... (isi logika google login) ...
      if ($payload && isset($payload['email'])) {
         $email = $payload['email'];
         $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ?");
@@ -45,7 +41,6 @@ if ($act === 'login') {
         redirect("p=dashboard");
     }
 } elseif ($act === 'register') {
-    // ... (Kodingan Register tetap sama) ...
     try {
         $stmt = $pdo->prepare("INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, 'user')");
         $stmt->execute([$_POST['name'], $_POST['email'], password_hash($_POST['password'], PASSWORD_DEFAULT)]);
@@ -56,7 +51,6 @@ if ($act === 'login') {
 }
 
 // --- 2. GENERAL ACTIONS (BISA ADMIN & USER) ---
-// PINDAHKAN INI KE ATAS (SEBELUM BLOK ADMIN)
 elseif ($act === 'book_now' && is_auth()) {
     $slot_ids = $_POST['slot_ids'] ?? [];
     if (empty($slot_ids)) redirect("p=booking_schedule&fid=" . $_POST['fid'] . "&date=" . $_POST['date'] . "&err=Pilih minimal 1 slot!");
@@ -101,7 +95,6 @@ elseif ($act === 'book_now' && is_auth()) {
     }
 } 
 elseif ($act === 'upload_pay' && is_auth()) {
-    // ... (Kodingan Upload tetap sama) ...
     if (!empty($_FILES['proof']['name'])) {
         $relativePath = 'public/payments/' . uniqid('pay_') . '.' . pathinfo($_FILES['proof']['name'], PATHINFO_EXTENSION);
         $uploadTarget = '../' . $relativePath;
@@ -113,7 +106,6 @@ elseif ($act === 'upload_pay' && is_auth()) {
     redirect("p=history&err=Pilih file gambar dulu");
 }
 elseif ($act === 'cancel_booking') {
-    // ... (Kodingan Cancel tetap sama) ...
     $id = $_POST['id'];
     if (is_admin()) {
         $pdo->prepare("UPDATE bookings SET status='cancelled' WHERE booking_id=?")->execute([$id]);
@@ -129,7 +121,6 @@ elseif ($act === 'cancel_booking') {
 // Letakkan di paling bawah agar tidak memblokir fungsi umum di atas
 elseif (is_admin()) {
     if ($act === 'save_facility') {
-        // ... (Isi kodingan save_facility Anda) ...
          $path = $_POST['old_img'] ?? null;
         if (!empty($_FILES['img']['name'])) {
             $relativePath = 'assets/facilities/' . uniqid() . '.' . pathinfo($_FILES['img']['name'], PATHINFO_EXTENSION);
@@ -149,7 +140,6 @@ elseif (is_admin()) {
         $pdo->prepare("DELETE FROM facilities WHERE facility_id=?")->execute([$_POST['id']]);
         redirect("p=facilities&success=Dihapus");
     } elseif ($act === 'add_slot') {
-        // ... (Isi add_slot) ...
         $start = $_POST['date'] . ' ' . $_POST['start'];
         $end = $_POST['date'] . ' ' . $_POST['end'];
         if ($start >= $end) redirect("p=slots&err=Jam mulai harus lebih awal");
@@ -163,7 +153,6 @@ elseif (is_admin()) {
         $pdo->prepare("DELETE FROM slots WHERE slot_id=?")->execute([$_POST['id']]);
         redirect("p=slots&success=Slot Dihapus");
     } elseif ($act === 'generate_slots') {
-        // ... (Isi generate_slots) ...
          $fid = $_POST['facility_id'];
         $start_date = new DateTime($_POST['start_date']);
         $end_date = new DateTime($_POST['end_date']);
@@ -191,4 +180,5 @@ elseif (is_admin()) {
         redirect("p=verification&success=Status Booking Diperbarui");
     }
 }
+
 ?>
