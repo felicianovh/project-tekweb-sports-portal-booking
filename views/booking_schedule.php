@@ -20,13 +20,20 @@
                         <?php foreach ($list as $s): $booked = $s['is_booked'] > 0 || $s['is_available'] == 0;
                             $start = date('H:i', strtotime($s['start_time']));
                             $end = date('H:i', strtotime($s['end_time'])); ?>
-                            <?php if ($booked): ?><div class="slot-disabled p-4 rounded-xl text-center border">
+                            <?php if ($booked): ?>
+                                <div class="slot-disabled p-4 rounded-xl text-center border">
                                     <div class="font-bold"><?= $start ?> - <?= $end ?></div>
                                     <div class="text-xs uppercase font-bold mt-1">Booked</div>
-                                </div><?php else: ?><div><input type="checkbox" name="slot_ids[]" value="<?= $s['slot_id'] ?>" id="slot_<?= $s['slot_id'] ?>" class="hidden slot-checkbox" onchange="calcTotal()"><label for="slot_<?= $s['slot_id'] ?>" class="block bg-white border border-slate-200 text-slate-600 p-4 rounded-xl text-center cursor-pointer hover:border-blue-900 transition select-none">
+                                </div>
+                            <?php else: ?>
+                                <div>
+                                    <input type="checkbox" name="slot_ids[]" value="<?= $s['slot_id'] ?>" id="slot_<?= $s['slot_id'] ?>" class="hidden slot-checkbox" onchange="calcTotal()">
+                                    <label for="slot_<?= $s['slot_id'] ?>" class="block bg-white border border-slate-200 text-slate-600 p-4 rounded-xl text-center cursor-pointer hover:border-blue-900 transition select-none">
                                         <div class="font-bold"><?= $start ?> - <?= $end ?></div>
                                         <div class="text-xs font-bold mt-1"><?= format_rupiah($f['price_per_hour']) ?></div>
-                                    </label></div><?php endif; ?>
+                                    </label>
+                                </div>
+                            <?php endif; ?>
                         <?php endforeach; ?>
                     </div>
                     <div class="fixed bottom-6 right-6 left-6 md:left-auto md:w-96 bg-blue-900 text-white p-4 rounded-2xl shadow-2xl flex justify-between items-center transform translate-y-full transition-transform duration-300" id="totalBar" style="z-index: 50;">
@@ -34,9 +41,15 @@
                             <div class="text-xs text-blue-200 uppercase font-bold">Total Pembayaran</div>
                             <div class="text-xl font-bold" id="totalPrice">Rp 0</div>
                             <div class="text-xs opacity-75" id="totalSlots">0 Slot dipilih</div>
-                        </div><?php if (is_auth()): ?><button class="bg-white text-blue-900 px-6 py-2 rounded-lg font-bold hover:bg-blue-50 transition">Bayar</button><?php else: ?><a href="?p=auth/login" class="bg-white text-blue-900 px-6 py-2 rounded-lg font-bold hover:bg-blue-50 transition text-sm">Login</a><?php endif; ?>
+                        </div>
+                        <?php if (is_auth()): ?>
+                            <button class="bg-white text-blue-900 px-6 py-2 rounded-lg font-bold hover:bg-blue-50 transition">Bayar</button>
+                        <?php else: ?>
+                            <a href="?p=auth/login" class="bg-white text-blue-900 px-6 py-2 rounded-lg font-bold hover:bg-blue-50 transition text-sm">Login</a>
+                        <?php endif; ?>
                     </div>
-                </form><?php endif; ?>
+                </form>
+            <?php endif; ?>
         </div>
     </div>
 </div>
@@ -60,4 +73,5 @@
         if (c > 0) b.style.transform = 'translateY(0)';
         else b.style.transform = 'translateY(150%)';
     }
+
 </script>
