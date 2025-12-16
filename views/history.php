@@ -75,9 +75,6 @@
 </div>
 
 <script>
-    // =======================================================
-    // FUNGSI KHUSUS UNTUK SUBMIT FORM CANCEL (SweetAlert)
-    // =======================================================
     function cancelViaForm(idBooking) {
         Swal.fire({
             title: 'Konfirmasi Cancel',
@@ -90,16 +87,11 @@
             cancelButtonText: 'Tidak'
         }).then((result) => {
             if (result.isConfirmed) {
-                // Cari form berdasarkan ID yang kita buat tadi
-                // Lalu submit secara manual lewat Javascript
                 document.getElementById('form-cancel-' + idBooking).submit();
             }
         })
     }
-
-    // =======================================================
-    // LOGIKA COUNTDOWN TIMER (Kode Lama Kamu)
-    // =======================================================
+    
     document.addEventListener("DOMContentLoaded", function() {
         function updateTimers() {
             const timers = document.querySelectorAll('.countdown-timer');
@@ -135,4 +127,5 @@
         setInterval(updateTimers, 1000);
         updateTimers();
     });
+
 </script>
