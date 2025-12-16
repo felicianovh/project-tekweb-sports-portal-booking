@@ -5,23 +5,17 @@ require_once 'config/database.php';
 // Pastikan Zona Waktu sesuai (WIB)
 date_default_timezone_set('Asia/Jakarta');
 
-// ==============================================================
-// 1. FITUR AUTO CANCEL
-// ==============================================================
+// FITUR AUTO CANCEL
 try {
     $pdo->query("UPDATE bookings SET status = 'cancelled'
                  WHERE status = 'pending'
                  AND booking_date < (NOW() - INTERVAL 30 MINUTE)");
 } catch (Exception $e) {
-    // Silent error
 }
 
-// ==============================================================
-// 2. ROUTING & LOGIC
-// ==============================================================
+// ROUTING & LOGIC
 $page = $_GET['p'] ?? 'dashboard';
 
-// Handle Login/Logout
 if ($page === 'auth/login') {
     require 'views/auth/login.php';
     exit;
@@ -32,14 +26,12 @@ if ($page === 'logout') {
     exit;
 }
 
-// --- UPDATE 1: Tambahkan 'admin_history' ke daftar halaman terbatas ---
 $restricted = ['history', 'facilities', 'slots', 'verification', 'reports', 'invoice', 'admin_history'];
 
 if (!is_auth() && in_array($page, $restricted)) {
     redirect("p=auth/login&err=Silakan login");
 }
 
-// --- UPDATE 2: Tambahkan 'admin_history' ke pengecekan Admin ---
 if (is_auth() && !is_admin() && in_array($page, ['facilities', 'slots', 'verification', 'reports', 'admin_history'])) {
     redirect("p=dashboard");
 }
@@ -159,9 +151,7 @@ elseif (is_admin()) {
         $inc = $pdo->query("SELECT SUM(total_price) FROM bookings WHERE status='approved'")->fetchColumn() ?? 0;
         $rows = $pdo->query("SELECT f.name, COUNT(*) as cnt, SUM(b.total_price) as tot FROM bookings b JOIN facilities f ON b.facility_id=f.facility_id WHERE b.status='approved' GROUP BY f.facility_id ORDER BY tot DESC")->fetchAll();
 
-        // --- UPDATE 3: Logika Data Riwayat Admin ---
     } elseif ($page === 'admin_history') {
-        // Mengambil semua data booking dari semua user
         $histories = $pdo->query("SELECT b.*, u.name as uname, f.name as fname 
                                   FROM bookings b 
                                   JOIN users u ON b.user_id = u.user_id 
@@ -170,7 +160,6 @@ elseif (is_admin()) {
     }
 }
 
-// 3. Render View
 require 'views/layout/header.php';
 
 $viewPath = "views/$page.php";
@@ -181,3 +170,4 @@ if (file_exists($viewPath)) {
 }
 
 require 'views/layout/footer.php';
+
