@@ -36,7 +36,11 @@
     <div class="flex flex-nowrap overflow-x-auto gap-6 pb-6 w-full snap-x">
         <?php foreach ($facs as $f): ?>
             <a href="?p=booking_schedule&fid=<?= $f['facility_id'] ?>" class="min-w-[300px] w-[300px] flex-shrink-0 snap-center group bg-white rounded-2xl shadow-sm border overflow-hidden hover:shadow-lg transition block">
-                <div class="h-40 bg-slate-200 relative"><?php if ($f['image_path']): ?><img src="<?= $f['image_path'] ?>" class="w-full h-full object-cover"><?php endif; ?><div class="absolute bottom-2 right-2 bg-blue-900 text-white px-3 py-1 rounded-lg text-xs font-bold"><?= format_rupiah($f['price_per_hour']) ?></div>
+                <div class="h-40 bg-slate-200 relative">
+                    <?php if ($f['image_path']): ?>
+                        <img src="<?= $f['image_path'] ?>" class="w-full h-full object-cover">
+                    <?php endif; ?>
+                    <div class="absolute bottom-2 right-2 bg-blue-900 text-white px-3 py-1 rounded-lg text-xs font-bold"><?= format_rupiah($f['price_per_hour']) ?></div>
                 </div>
                 <div class="p-4">
                     <h3 class="font-bold text-lg text-slate-800 group-hover:text-blue-900 transition truncate"><?= $f['name'] ?></h3>
@@ -46,4 +50,5 @@
         <?php endforeach; ?>
         <div class="min-w-[1px] w-[1px] flex-shrink-0"></div>
     </div>
+
 <?php endif; ?>
